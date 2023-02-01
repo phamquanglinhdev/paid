@@ -1,33 +1,5 @@
 @extends(backpack_view("blank"))
 @section("content")
-    <div class="container-fluid mb-5">
-        <div class="h2">Hóa đơn cần gia hạn !</div>
-        <div class="small mb-2">Chọn và xóa hóa đơn cũ khi đã tạo hóa đơn mới !</div>
-        @foreach($_remaining as $bill)
-            <div class="bg-danger p-2 rounded justify-content-between d-flex align-items-center">
-                <div>
-                    <div>
-                        <i class="las la-user"></i>
-                        Học sinh : {{$bill->student->name}}.
-                    </div>
-                    <div>
-                        <i class="las la-calendar"></i>
-                        Ngày hết hạn : {{date("d-m-Y",strtotime($bill->end))}}
-                    </div>
-                </div>
-                <div>
-                    <form action="{{route("bill.destroy",$bill->id)}}" method="post">
-                        @csrf
-                        @method("DELETE")
-                        <button type="submit" class="btn  rounded">
-                            <i class="lar la-2x text-white la-check-circle"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-        @endforeach
-    </div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-6 col-lg-3">
@@ -117,5 +89,33 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="container-fluid mb-5">
+        <div class="h2">Hóa đơn cần gia hạn !</div>
+        <div class="small mb-2">Chọn và xóa hóa đơn cũ khi đã tạo hóa đơn mới !</div>
+        @foreach($_remaining as $bill)
+            <div class="bg-danger p-2 rounded justify-content-between d-flex align-items-center my-2">
+                <div>
+                    <div>
+                        <i class="las la-user"></i>
+                        Học sinh : {{$bill->student->name}}.
+                    </div>
+                    <div>
+                        <i class="las la-calendar"></i>
+                        Ngày hết hạn : {{date("d-m-Y",strtotime($bill->end))}}
+                    </div>
+                </div>
+                <div>
+                    <form action="{{route("bill.destroy",$bill->id)}}" method="post">
+                        @csrf
+                        @method("DELETE")
+                        <button type="submit" class="btn  rounded">
+                            <i class="lar la-2x text-white la-check-circle"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        @endforeach
     </div>
 @endsection
