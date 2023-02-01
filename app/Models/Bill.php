@@ -53,6 +53,21 @@ class Bill extends Model
     | SCOPES
     |--------------------------------------------------------------------------
     */
+    public function Day()
+    {
+        $now = date("Y-m-d");
+        $end = $this->end;
+        $day = (strtotime($end) - strtotime($now)) / 3600 / 24;
+        if ($day > 10) {
+            return view("components.badge", ["day" => $day, 'type' => 'success']);
+        } elseif ($day > 0) {
+            return view("components.badge", ["day" => $day, 'type' => 'warning']);
+        }else{
+            return view("components.badge",["day"=>$day,'type'=>'dark']);
+        }
+
+    }
+
     public function Remaining()
     {
         if ($this->disable == 1) {

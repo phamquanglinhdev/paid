@@ -11,6 +11,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Carbon\Carbon;
 
 /**
  * Class BillCrudController
@@ -35,7 +36,26 @@ class BillCrudController extends CrudController
         CRUD::setModel(\App\Models\Bill::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/bill');
         CRUD::setEntityNameStrings('Hóa đơn', 'Danh sach hóa đơn');
+        $less_10_day = Carbon::parse('Now +10 days');
         $this->crud->denyAccess(["show"]);
+        $this->crud->addFilter([
+            'type' => 'simple',
+            'name' => 'remaining',
+            'label' => 'Sắp hết hạn'
+        ],
+            false,
+            function () use ($less_10_day) { // if the filter is active
+                $this->crud->query->where("end", "<=", date($less_10_day))->where("end", ">=", now());
+            });
+        $this->crud->addFilter([
+            'type' => 'simple',
+            'name' => 'expired',
+            'label' => 'Đã hết hạn'
+        ],
+            false,
+            function () use ($less_10_day) { // if the filter is active
+                $this->crud->query->where("end", "<", now());
+            });
     }
 
     /**
@@ -56,6 +76,14 @@ class BillCrudController extends CrudController
         CRUD::column('amount')->label("Số tiền")->type("number")->suffix("đ");
         CRUD::column('start')->label("Bắt đầu")->type("date");
         CRUD::column('end')->label("Kết thúc")->type("date");
+        CRUD::addColumn(
+            [
+//                'name' => 'Day',
+                'label' => 'Thời gian còn lại',
+                'type' => 'model_function',
+                'function_name' => 'Day'
+            ]);
+
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -126,6 +154,6 @@ class BillCrudController extends CrudController
         Bill::find($id)->update([
             'disable' => 1,
         ]);
-        return redirect()->back()->with("success","Đã xóa thành công !");
+        return redirect()->back()->with("success", "Đã xóa thành công !");
     }
 }
