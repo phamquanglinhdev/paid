@@ -2,6 +2,7 @@
 @section("content")
     <div class="container-fluid mb-5">
         <div class="h2">Hóa đơn cần gia hạn !</div>
+        <div class="small mb-2">Chọn và xóa hóa đơn cũ khi đã tạo hóa đơn mới !</div>
         @foreach($_remaining as $bill)
             <div class="bg-danger p-2 rounded justify-content-between d-flex align-items-center">
                 <div>
@@ -15,9 +16,13 @@
                     </div>
                 </div>
                 <div>
-                    <a href="{{backpack_url("/bill/$bill->id/delete")}}" class="btn  rounded">
-                        <i class="lar la-2x text-white la-check-circle"></i>
-                    </a>
+                    <form action="{{route("bill.destroy",$bill->id)}}" method="post">
+                        @csrf
+                        @method("DELETE")
+                        <button type="submit" class="btn  rounded">
+                            <i class="lar la-2x text-white la-check-circle"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -104,7 +109,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card border-0 text-white bg-blue">
                     <div class="card-body">
-                        <div class="text-value">{{round(($_total_in_month/$_total_in_last_month)*100)}} % </div>
+                        <div class="text-value">{{round(($_total_in_month/$_total_in_last_month)*100)}} %</div>
                         <small>Tăng trưởng</small>
                         <small>( tính đến {{\Carbon\Carbon::now()->isoFormat("DD-MM-YYYY")}})</small>
                     </div>

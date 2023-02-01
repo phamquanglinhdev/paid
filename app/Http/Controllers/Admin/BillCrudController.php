@@ -126,5 +126,6 @@ class BillCrudController extends CrudController
         Bill::find($id)->update([
             'disable' => 1,
         ]);
+        return redirect()->back()->with("success","Đã xóa thành công !");
     }
 }

@@ -55,6 +55,9 @@ class Bill extends Model
     */
     public function Remaining()
     {
+        if ($this->disable == 1) {
+            return true;
+        }
         $now = date("Y-m-d");
         $end = $this->end;
         return (((strtotime($end) - strtotime($now)) / 3600 / 24) > 10) || ((strtotime($end) - strtotime($now)) < 0);
