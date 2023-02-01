@@ -10,7 +10,7 @@ class DiscordController extends Controller
 {
     public static function notification($student, $amount, $end): \Illuminate\Http\Client\Response
     {
-        return Http::post('https://discord.com/api/webhooks/1069944620257120336/ZtyG5RBfoypXtLlHtVduDoUAjlZ9zCJH5-F-_sg-pC10O9lTiLtR90h-1K5L7EJ0EGrz', [
+        return Http::post(env("DISCORD_WEBHOOK"), [
             'content' => "Thông báo sắp đến hạn đóng học phí",
             'embeds' => [
                 [
